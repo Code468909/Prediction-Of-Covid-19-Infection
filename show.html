@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>COVID-19 Probability Detector</title>
+    <style>
+    *{
+      margin:0px;
+      padding:0px;
+        box-sizing: border-box;
+        font-family: 'Poppins',serif;
+        text-decoration: none !important;
+    }
+    html {
+        font-size: 68.5%;
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    
+    }
+    h1, h2, h3, h4, h5, .h1, .h2, .h3, .h4, .h5 {
+      font-family: "Mulish", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      line-height: 1.2;
+    }
+    .text-center {
+      text-align: center !important;
+    }
+    
+    div {
+        display: block;
+    }
+    
+    :root {
+      --blue: #007bff;
+      --indigo: #6610f2;
+      --purple: #6f42c1;
+      --pink: #e83e8c;
+      --red: #e84a5f;
+      --orange: #fd7e14;
+      --yellow: #ffc107;
+      --green: #a8df65;
+      --teal: #20c997;
+      --cyan: #47eef4;
+      --white: #fff;
+      --gray: #6c757d;
+      --gray-dark: #343a40;
+      --primary: #6f42c1;
+      --secondary: #47eef4;
+      --success: #a8df65;
+      --info: #47eef4;
+      --warning: #ffc107;
+      --danger: #e84a5f;
+      --light: #f8f9fa;
+      --dark: #343a40;
+      --breakpoint-xs: 0;
+      --breakpoint-sm: 576px;
+      --breakpoint-md: 768px;
+      --breakpoint-lg: 992px;
+      --breakpoint-xl: 1200px;
+      --font-family-sans-serif: "Mulish", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    
+    body {
+      font-family: 'Lato', sans-serif;
+      line-height: 1.8;
+        color: gray;
+        font-weight: 400;
+        font-size: 14px;
+    
+    }
+    
+    .container {
+      width: 100%;
+      padding-right: 15px;
+      padding-left: 15px;
+      margin-right: auto;
+      margin-left: auto;
+    
+    }
+    
+    h1 {
+      display: block;
+      font-size: 3em;
+      margin-block-start: 0.67em;
+      margin-block-end: 0.67em;
+      margin-inline-start: 0px;
+      margin-inline-end: 0px;
+      font-weight: bold;
+    }
+    
+    h3 {
+      display: block;
+      text-align: left;
+      margin-block-start: 1em;
+      margin-block-end: 1em;
+      margin-inline-start: 0px;
+      margin-inline-end: 0px;
+      font-weight: bold;
+    }
+    
+    .col-6, .col-7, .col-12, .col, .col-sm-3, .col-sm-6, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-8, .col-md-9, .col-md-10, .col-md-12, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-10, .col-lg-12, .col-xl-2 {
+      position: relative;
+      width: 100%;
+      padding-right: 15px;
+      padding-left: 15px;
+    }
+    
+    
+    p {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      display: block;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+    }
+    
+    .row {
+    
+      display: flex;
+    
+      flex-wrap: wrap;
+      margin-right: -15px;
+      margin-left: -15px;
+    }
+    
+    .mb-4 {
+      margin-bottom: 1.5rem !important;
+    }
+    .ml-auto, .mx-auto {
+      margin-left: auto !important;
+    }
+    .pb-5 {
+      padding-bottom: 3rem !important;
+    }
+    
+    .feature-v1 .icon-wrap {
+      font-size: 2.5rem;
+    }
+    
+    .mr-3 {
+      margin-right: 1rem !important;
+    }
+    [class^="icon-"], [class*=" icon-"] {
+      font-family: 'icomoon' !important;
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      line-height: 1;
+      -webkit-font-smoothing: antialiased;
+      
+    }
+    .feature-v1 .icon-wrap span {
+      color: #6f42c1;
+    }
+    .feature-v1 .icon-wrap {
+      font-size: 2.5rem;
+    }
+    .feature-v1 h3 {
+      font-size: 20px;
+      font-weight: 920;
+      margin-bottom: 0;
+      color: #6f42c1;
+    }
+    
+    
+    .overlay,.dropdown-btn {
+      height: 0%;
+      width: 100%;
+      position: fixed;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      background-color: rgb(0,0,0);
+      background-color: rgba(0,0,0, 0.9);
+      overflow-y: hidden;
+      transition: 0.5s;
+    }
+    
+    .overlay-content,.dropdown-btn {
+      position: relative;
+      top: 25%;
+      width: 100%;
+      text-align: center;
+      margin-top: 10px;
+    }
+    
+    .overlay a,.dropdown-btn {
+      padding: 8px;
+      text-decoration: none;
+      font-size: 30px;
+      color: #818181;
+      display: block;
+      transition: 0.3s;
+    }
+    
+    .overlay a:hover, .overlay a:focus,.dropdown-btn:hover {
+      color: #f1f1f1;
+    }
+    
+    .overlay .closebtn {
+      position: absolute;
+      top: 20px;
+      right: 45px;
+      font-size: 60px;
+    }
+    
+    @media screen and (max-height: 450px) {
+      .overlay {overflow-y: auto;}
+      .overlay a {font-size: 20px}
+      .overlay .closebtn {
+      font-size: 40px;
+      top: 15px;
+      right: 35px;
+      }
+    }
+    
+    /* Add an active class to the active dropdown button */
+    .active {
+      background-color: rgb(14, 14, 14);
+      color: rgb(255, 249, 249);
+    }
+    
+    /* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
+    .dropdown-container {
+      display: none;
+     
+      padding-left: 8px;
+    }
+    
+    /* Optional: Style the caret down icon */
+    .fa-caret-down {
+      float: right;
+      padding-right: 8px;
+    }
+    /* Some media queries for responsiveness */
+    @media screen and (max-height: 450px) {
+      .sidenav {padding-top: 15px;}
+      .sidenav a {font-size: 18px;}
+    }
+    
+    .hero-v1 {
+      padding: 8rem 0 8rem 0;
+      border-bottom-right-radius: 50%;
+      background: rgba(111, 66, 193, 0.1);
+      overflow: hidden;
+    }
+    .align-items-center {
+      -webkit-box-align: center !important;
+      -ms-flex-align: center !important;
+      align-items: center !important;
+    }
+    .mr-auto, .mx-auto {
+      margin-right: auto !important;
+    }
+    
+    .hero-v1 .heading {
+        font-size: 35px;
+    }
+    .hero-v1 .heading {
+        font-weight: 900;
+        color: #6f42c1;
+        font-size: 40px;
+    }
+    .mb-3 {
+        margin-bottom: 1rem !important;
+    }
+    
+    .mb-5, .my-5 {
+      margin-bottom: 3rem !important;
+    }
+    
+    .btn.btn-primary {
+      background: #6f42c1;
+      border-color: #6f42c1;
+      color: #fff;
+    }
+    a:-webkit-any-link {
+      color: -webkit-link;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .btn {
+      font-size: 12px;
+      text-transform: uppercase;
+      border-radius: 30px;
+      padding: 10px 30px;
+      display: inline-block;
+        font-weight: 400;
+        text-align: center;
+        vertical-align: middle;
+        user-select: none;
+        border: 1px solid transparent;
+        line-height: 1.5;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+    
+    }
+    .hero-v1 .illustration {
+      position: relative;
+      margin-top: -100px;
+      position: absolute;
+    }
+    
+    figure {
+      margin: 0 0 1rem;
+    }
+    article, figcaption, figure, footer, header, main, nav {
+      display: block;
+    }
+    figure {
+      display: block;
+      margin-block-start: 1em;
+      margin-block-end: 1em;
+      margin-inline-start: 40px;
+      margin-inline-end: 40px;
+    }
+    script {
+      display: none;
+    }
+    
+    ::selection {
+      background: #000;
+      color: #fff;
+    }
+    
+    *, *::before, *::after {
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+    
+    .feature-v1 .icon-wrap {
+      font-size: 2.5rem;
+    }
+    .mr-3 {
+      margin-right: 1rem !important;}
+    
+    .flaticon-protection:before {
+      content: "\f100";
+    }
+    
+    .bg-primary-light {
+      background: rgba(111, 66, 193, 0.05);
+    }
+    .site-section {
+      padding: 90px 0;
+    }
+    .col-6 {
+      -webkit-box-flex: 0;
+      -ms-flex: 0 0 50%;
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
+    .media-v1 {
+      -webkit-box-shadow: 0 15px 30px 0 rgb(0 0 0 / 5%);
+      box-shadow: 0 15px 30px 0 rgb(0 0 0 / 5%);
+      border-radius: 7px;
+      overflow: hidden;
+      margin-bottom: 30px;
+      background: #fff;
+    }
+    .media-v1.bg-1 .icon-wrap {
+      background: rgba(111, 66, 193, 0.2);
+    }
+    .media-v1 .icon-wrap {
+      height: 140px;
+      width: 100%;
+      background: #6f42c1;
+      color: #6f42c1;
+      text-align: center;
+      position: relative;
+    }
+    [class^="icon-"], [class*=" icon-"] {
+      font-family: 'icomoon' !important;
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      line-height: 1;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .media-v1 .icon-wrap span {
+      position: absolute;
+      font-size: 50px;
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+    }
+    .media-v1 .icon-wrap {
+      height: 140px;
+      width: 100%;
+      background: #6f42c1;
+      color: #6f42c1;
+      text-align: center;
+      position: relative;
+    }
+    .media-v1 .body {
+      padding: 30px;
+    }
+    .media-v1 .body h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #6f42c1;
+    }
+    .media-v1 .body *:last-child {
+      margin-bottom: 0;
+    }
+    .media-v1 .body p {
+      color: #aaa;
+      font-size: 14px;
+    }
+    .list-unstyled {
+      padding-left: 0;
+      list-style: none;
+    }ol, ul {
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+    .symptom {
+        padding: 30px;
+        box-shadow: rgb(0 0 0 / 10%) 0px 15px 30px 0px;
+        background: rgb(255, 255, 255);
+    }
+    
+    .symptom .img {
+        -webkit-box-flex: 0;
+        flex: 0 0 80px;
+        margin-right: 20px;
+    }
+    .d-flex {
+        display: flex !important;
+    }
+    .team {
+      text-align: center;
+    }
+    .team img {
+      margin-bottom: 30px;
+      width: 150px;
+      border-radius: 30%;
+    }
+    .team h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #6f42c1;
+    }.mb-2 {
+      margin-bottom: 0.5rem !important;
+    }
+    .d-block {
+      display: block !important;
+    }
+    .section-heading {
+      font-size: 30px;
+      font-weight: 900;
+      color: #6f42c1;
+    }
+    
+    
+    </style>
+    
+  </head>
+  <body> 
+
+    <div id="myNav" class="overlay" style="position: fixed;">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      <div class="overlay-content">
+        <a href="#container-1">HOME</a>
+        <a href="#container-3">PREVENTION</a>
+        <a href="#container-5">SYMPTOMS</a>
+       
+        <button class="dropdown-btn">MANY MORE
+          <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-container">
+          
+          <a href="https://verify.cowin.gov.in/">VERIFY CERTIFICATE</a>
+          <a href="https://healthid.ndhm.gov.in/">ABHA(HEALTH ID)</a>
+          
+        </div>
+        <a href="#container-9">CONTACT</a>
+       
+      </div>
+    </div>
+    
+    <div style="background-color: rgb(12, 11, 11);">
+    <span style="font-size:30px;cursor:pointer;color:white;margin-left:20px;" onclick="openNav()">  &#9776;  <img src="https://preview.colorlib.com/theme/docmed/img/xfooter_logo.png.pagespeed.ic.xG_fu5FTHW.webp" alt=""style="margin-left: 10px;margin-top: 2px;"></span>
+    </div>
+    <script>
+    function openNav() {
+      document.getElementById("myNav").style.height = "100%";
+    }
+    
+    function closeNav() {
+      document.getElementById("myNav").style.height = "0%";
+    }
+    </script>
+    <script>
+      /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
+      var dropdown = document.getElementsByClassName("dropdown-btn");
+      var i;
+      
+      for (i = 0; i < dropdown.length; i++) {
+        dropdown[i].addEventListener("click", function() {
+          this.classList.toggle("active");
+          var dropdownContent = this.nextElementSibling;
+          if (dropdownContent.style.display === "block") {
+            dropdownContent.style.display = "none";
+          } else {
+            dropdownContent.style.display = "block";
+          }
+        });
+      }
+      </script>
+
+<div class="site-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 ">
+            <div class="row mt-5 pt-5"></div>
+          <h1 class=" mt-3"style="color: #6f42c1;">Coronavirus Probability Detector</h1>
+          <p>Thanks for using Covid probability detector.</p>
+          <p>Patient's prbability of Infection is <strong>{{inf}}%</strong>. Thank You</p>
+
+          <a href="/">
+            <button class="btn btn-primary my-2 my-sm-0" type="submit">Go Back</button>
+        </a>
+
+      </div>
+      <div class="col-lg-6">
+        <img src="https://img.freepik.com/free-vector/person-fighting-virus-illustrated_52683-35833.jpg?w=996&t=st=1652685102~exp=1652685702~hmac=fbf8e6917104874ad10f4942356a3afe9259338c43817e2658608034e0536be5" alt="Image" class="img-fluid" style="max-width: 100%;
+        height: auto;vertical-align: middle;
+          border-style: none;box-sizing: border-box;    line-height: 1.7;
+          color: gray;
+          font-weight: 400;
+          font-size: 1rem;"data-pagespeed-url-hash="1094297152" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">
+        </div>
+      </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <!-- Footer -->
+<footer class="text-center text-lg-start bg-light text-muted">
+  <!-- Section: Social media -->
+  <section
+    class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom"
+  >
+    <!-- Left -->
+    <div class="me-5 d-none d-lg-block">
+      <span>Get connected with us on social networks:</span>
+    </div>
+    <!-- Left -->
+
+    <!-- Right -->
+    <div>
+      <a href="" class="me-4 text-reset">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+      <a href="" class="me-4 text-reset">
+        <i class="fab fa-twitter"></i>
+      </a>
+      <a href="" class="me-4 text-reset">
+        <i class="fab fa-google"></i>
+      </a>
+      <a href="" class="me-4 text-reset">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a href="" class="me-4 text-reset">
+        <i class="fab fa-linkedin"></i>
+      </a>
+      <a href="" class="me-4 text-reset">
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <!-- Right -->
+  </section>
+  <!-- Section: Social media -->
+
+  <!-- Section: Links  -->
+  <section class="container"id="container-9">
+    <div class="container text-center text-md-start mt-5">
+      <!-- Grid row -->
+      <div class="row mt-3">
+        <!-- Grid column -->
+        <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+          <!-- Content -->
+          <h6 class="text-uppercase fw-bold mb-4">
+            <i class="fas fa-gem me-3"></i>About us
+          </h6>
+          <p>
+            The aim of this thesis is to predict whether a person has COVID-19 or not, using
+machine learning techniques. The prediction is performed using the clinical information of the patients. The goal is to identify whether a patient can potentially be
+diagnosed with COVID-19.
+          </p>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold mb-4">
+            Quick Links
+          </h6>
+          <p>
+            <a href="#container-5" class="text-reset">Symptoms</a>
+          </p>
+          <p>
+            <a href="#container-3" class="text-reset">Prevention</a>
+          </p>
+          <p>
+            <a href="#container-5" class="text-reset">About Covid</a>
+          </p>
+          <p>
+            <a href="https://selfregistration.cowin.gov.in/" class="text-reset">Register Members</a>
+          </p>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold mb-4">
+            RESOURCES
+          </h6>
+          <p>
+            <a href="https://prod-cdn.preprod.co-vin.in/assets/pdf/User_Guide_Citizen_registration_15%2BandPrecaution.pdf" class="text-reset">How To Get Vaccinated</a>
+          </p>
+          <p>
+            <a href="https://www.who.int/" class="text-reset">WHO Website</a>
+          </p>
+          
+    
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold mb-4">
+            Contact
+          </h6>
+          <p><STONG>Health Ministry</STONG>   <i class="fas fa-phone me-3"></i>
+            <a href="tel:+91-11-23978046">+91-11-23978046</a> or 
+              <a href="tel:1075">1075</a>
+
+
+</p>
+          <p>  <STRONg>Child</STRONg>
+            <i class="fas fa-phone me-3"></i>
+          
+            <a href="tel:1098">1098</a>
+
+
+          </p>
+          <P><STRONg>Mental Health</STRONg>
+          <i class="fas fa-phone me-3"></i>
+          <a href="tel:08046110007">08046110007</a>
+</p>
+<P> <strong>Senior Citizens</strong>
+<i class="fas fa-phone me-3"></i> 
+<a href="tel:14567">14567</a>
+</p>
+
+<p><strong>NCW</strong>        <i class="fas fa-phone me-3"></i>
+  <a href="tel:7827170170">7827170170</a></p>
+
+        </div>
+        <!-- Grid column -->
+      </div>
+      <!-- Grid row -->
+    </div>
+  </section>
+  <!-- Section: Links  -->
+
+  <!-- Copyright -->
+  <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+    © 2021 Copyright:
+    <a class="text-reset fw-bold" href="https://docmedcom/">docmed.com</a>
+  </div>
+  <!-- Copyright -->
+</footer>
+<!-- Footer --> 
+    </body>
+</html>
